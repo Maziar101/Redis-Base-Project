@@ -9,10 +9,11 @@ export const getOrderCn = async (req, res, next) => {
     return res.status(200).json({
       status: "success",
       source: "cache",
-      data: orderCache,
+      data: JSON.parse(orderCache),
     });
   }
   const order = await getOrder(id);
+  await client.setEx(orderKey, 300, JSON.stringify(order));
   return res.status(200).json({
     status: "success",
     source: "database",
