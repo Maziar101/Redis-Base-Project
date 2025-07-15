@@ -1,10 +1,11 @@
 import { getUser } from "../../db.js";
 import client from "../../redis.js";
+import { getCache, setCache } from "../../utils/handleCache.js";
 
 export const getUserCn = async (req, res, next) => {
   const id = req.params.id;
   const userKey = `user:${id}`;
-  const userCache = await client.get(userKey);
+  const userCache = getCache(userKey);
   if (userCache) {
     return res.status(200).json({
       status: "success",
@@ -13,7 +14,7 @@ export const getUserCn = async (req, res, next) => {
     });
   }
   const user = await getUser(id);
-  await client.setEx(userKey, 300, JSON.stringify(user));
+  setCache(userKey, 400, user);
   return res.status(200).json({
     status: "success",
     source: "database",
