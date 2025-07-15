@@ -7,3 +7,7 @@ export const setCache = async (key, second, value) => {
 export const getCache = async (key) => {
   return await JSON.parse(client.get(key));
 };
+
+export const delCache = async (key) => {
+  await client.del(key);
+};
